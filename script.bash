@@ -102,11 +102,6 @@ nom_conteneur="presta_test_prestashop_1"
 #Redémarrage du conteneur
 docker restart $nom_conteneur
 
-while docker ps -q -f name=$nom_conteneur -f status=restarting >/dev/null; do
-  echo "Le conteneur $nom_conteneur est en cours de redémarrage. Attente..."
-  sleep 5  
-done
-
 docker exec -it $nom_conteneur chown -R www-data:www-data /var/www/html
 
 echo "--> Script terminée !"

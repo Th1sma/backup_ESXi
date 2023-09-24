@@ -49,6 +49,9 @@ decompress_zip_file() {
 }
 
 # -------------- Téléchargement des fichiers zip depuis le serveur FTP -------------- #
+# Suppression de toutes les dossiers /fichiers du repertoire "volume"
+rm -r "$LOCAL_DIRECTORY/"
+
 # Télécharger la BDD depuis le serveur SFTP
 download_file "/private/archives/mnails.$DAYTIME.dump.sql.gz" "$LOCAL_DIRECTORY/mnails.$DAYTIME.dump.sql.gz"
 

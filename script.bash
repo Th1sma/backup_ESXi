@@ -3,8 +3,6 @@
 # Définir les informations de connexion SFTP
 SFTP_HOST="mnovae-vt-prod-lamp01.dcsrv.eu"
 SFTP_PORT="22"
-SFTP_USERNAME="mnails"
-SFTP_PASSWORD="3+lvf6kEUxAM3A=="
 
 # Répertoire local pour sauvegarder les fichiers téléchargés
 LOCAL_DIRECTORY="/home/master/Bureau/volumes_serveur1/prest_16_test"

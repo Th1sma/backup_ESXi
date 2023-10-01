@@ -1,11 +1,11 @@
 #!/bin/bash
 
 # Définir les informations de connexion SFTP
-SFTP_HOST="mnovae-vt-prod-lamp01.dcsrv.eu"
+SFTP_HOST="name_ftp_server"
 SFTP_PORT="22"
 
 # Répertoire local pour sauvegarder les fichiers téléchargés
-LOCAL_DIRECTORY="/home/master/Bureau/volumes_serveur1/prest_16_test"
+LOCAL_DIRECTORY=$("find / -type d -name "name_file_research"")
 
 # Obtenir la date actuelle au format YYYYMMDD
 DAYTIME=$(date +"%Y%m%d")
@@ -47,8 +47,8 @@ decompress_zip_file() {
 }
 
 # -------------- Téléchargement des fichiers zip depuis le serveur FTP -------------- #
-# Suppression de toutes les dossiers /fichiers du repertoire "volume"
-rm -r "$LOCAL_DIRECTORY/"
+# Suppression de toutes les dossiers / fichiers du repertoire "volume"
+# A FAIRE
 
 # Télécharger la BDD depuis le serveur SFTP
 download_file "/private/archives/mnails.$DAYTIME.dump.sql.gz" "$LOCAL_DIRECTORY/mnails.$DAYTIME.dump.sql.gz"

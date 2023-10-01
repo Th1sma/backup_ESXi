@@ -1,5 +1,5 @@
 #!/bin/bash
-
+# FAIRE UN MENU POUR ENTRER LES INFORMATIONS DE CONNEXION SERVEUR / NOM DU DOSSIER OU FICHIER A DOWNLOAD
 # Définir les informations de connexion SFTP
 SFTP_HOST="name_ftp_server"
 SFTP_PORT="22"

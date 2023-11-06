@@ -1,19 +1,5 @@
 #!/bin/bash
 
-# Menu pour entrer les informations de connexion SFTP
-echo "Veuillez entrer les informations de connexion SFTP :"
-read -p "Nom du serveur FTP : " SFTP_HOST
-read -p "Port SFTP (par défaut 22) : " SFTP_PORT
-read -p "Nom d'utilisateur SFTP : " SFTP_USERNAME
-read -s -p "Mot de passe SFTP : " SFTP_PASSWORD
-echo
-
-# Menu pour choisir les répertoires
-echo "Veuillez entrer les chemins des répertoires :"
-read -p "Répertoire local pour sauvegarder les fichiers téléchargés : " LOCAL_DIRECTORY
-read -p "Répertoire sur le serveur SFTP (fichiers à télécharger) : " SFTP_REMOTE_DIRECTORY
-echo
-
 # Obtenir la date actuelle au format YYYYMMDD
 DAYTIME=$(date +"%Y%m%d")
 
@@ -31,7 +17,20 @@ download_file() {
 EOF
 }
 
-# -------------- Téléchargement des fichiers depuis le serveur FTP -------------- #
+# Menu pour entrer les informations de connexion SFTP
+echo "== Veuillez entrer les informations de connexion SFTP : =="
+read -p "Nom du serveur FTP : " SFTP_HOST
+read -p "Port SFTP (par défaut 22) : " SFTP_PORT
+read -p "Nom d'utilisateur SFTP : " SFTP_USERNAME
+read -s -p "Mot de passe SFTP : " SFTP_PASSWORD
+echo
+
+# Menu pour choisir les répertoires
+echo "== Veuillez entrer les chemins des répertoires : =="
+read -p "Répertoire local pour sauvegarder les fichiers téléchargés : " LOCAL_DIRECTORY
+read -p "Répertoire sur le serveur SFTP (fichiers à télécharger) : " SFTP_REMOTE_DIRECTORY
+echo
+
 # Télécharger la BDD depuis le serveur SFTP
 download_file "$SFTP_REMOTE_DIRECTORY" "$LOCAL_DIRECTORY"
 

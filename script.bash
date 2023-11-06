@@ -1,11 +1,18 @@
 #!/bin/bash
-# FAIRE UN MENU POUR ENTRER LES INFORMATIONS DE CONNEXION SERVEUR / NOM DU DOSSIER OU FICHIER A DOWNLOAD
-# Définir les informations de connexion SFTP
-SFTP_HOST="name_ftp_server"
-SFTP_PORT="22"
 
-# Répertoire local pour sauvegarder les fichiers téléchargés
-LOCAL_DIRECTORY=$("find / -type d -name "name_file_research"")
+# Menu pour entrer les informations de connexion SFTP
+echo "Veuillez entrer les informations de connexion SFTP :"
+read -p "Nom du serveur FTP : " SFTP_HOST
+read -p "Port SFTP (par défaut 22) : " SFTP_PORT
+read -p "Nom d'utilisateur SFTP : " SFTP_USERNAME
+read -s -p "Mot de passe SFTP : " SFTP_PASSWORD
+echo
+
+# Menu pour choisir les répertoires
+echo "Veuillez entrer les chemins des répertoires :"
+read -p "Répertoire local pour sauvegarder les fichiers téléchargés : " LOCAL_DIRECTORY
+read -p "Répertoire sur le serveur SFTP : " SFTP_REMOTE_DIRECTORY
+echo
 
 # Obtenir la date actuelle au format YYYYMMDD
 DAYTIME=$(date +"%Y%m%d")
@@ -46,15 +53,12 @@ decompress_zip_file() {
     unzip "$ZIP_FILE" -d "$DESTINATION_DIRECTORY"
 }
 
-# -------------- Téléchargement des fichiers zip depuis le serveur FTP -------------- #
-# Suppression de toutes les dossiers / fichiers du repertoire "volume"
-# A FAIRE
-
+# -------------- Téléchargement des fichiers depuis le serveur FTP -------------- #
 # Télécharger la BDD depuis le serveur SFTP
-download_file "/private/archives/mnails.$DAYTIME.dump.sql.gz" "$LOCAL_DIRECTORY/mnails.$DAYTIME.dump.sql.gz"
+download_file "$SFTP_REMOTE_DIRECTORY/mnails.$DAYTIME.dump.sql.gz" "$LOCAL_DIRECTORY/mnails.$DAYTIME.dump.sql.gz"
 
 # Télécharger les fichiers htdocs depuis le serveur SFTP
-download_file "/private/archives/mnails.$DAYTIME.htdocs.zip" "$LOCAL_DIRECTORY/mnails.$DAYTIME.htdocs.zip"
+download_file "$SFTP_REMOTE_DIRECTORY/mnails.$DAYTIME.htdocs.zip" "$LOCAL_DIRECTORY/mnails.$DAYTIME.htdocs.zip"
 
 # Décompresser le fichier BDD
 decompress_gzip_file "$LOCAL_DIRECTORY/mnails.$DAYTIME.dump.sql.gz" "$LOCAL_DIRECTORY/mnails.$DAYTIME.dump.sql"
@@ -68,41 +72,4 @@ decompress_zip_file "$LOCAL_DIRECTORY/mnails.$DAYTIME.htdocs.zip" "$LOCAL_DIRECT
 # Supprimer le fichier HTDOCS compressé
 rm "$LOCAL_DIRECTORY/mnails.$DAYTIME.htdocs.zip"
 
-echo "--> Les dossiers sont bien chargés."
-
-# -------------- Modifications des fichiers de configuration serveur -------------- #
-# Chemin vers le fichier de configuration PHP
-config_file="$LOCAL_DIRECTORY/htdocs/config/settings.inc.php"
-
-# Nouvelle valeur que vous souhaitez définir
-nouvelle_valeur="172.25.0.4"
-
-# Utilisez sed pour modifier la ligne dans le fichier
-sed -i "s/define('_DB_SERVER_', '127.0.0.1');/define('_DB_SERVER_', '$nouvelle_valeur');/" /home/master/Bureau/volumes_serveur1/prest_16_test/htdocs/config/settings.inc.php
-
-rm -r  "$LOCAL_DIRECTORY/htdocs/adminold"
-
-echo "--> Les modifications ont été effectuées."
-
-# -------------- Modification des informations sur la BDD -------------- #
-# Informations de connexion à la bdd
-
-echo "GRANT ALL PRIVILEGES ON *.* TO 'mnails'@'172.25.0.2' IDENTIFIED BY 'QKKgnie7U31Egg==';" >> "$LOCAL_DIRECTORY/mnails.$DAYTIME.dump.sql"
-
-echo "GRANT ALL PRIVILEGES ON *.* TO 'mnails'@'172.25.0.3' IDENTIFIED BY 'QKKgnie7U31Egg==';" >> "$LOCAL_DIRECTORY/mnails.$DAYTIME.dump.sql"
-
-echo "UPDATE ps_shop_url SET domain='192.168.1.155:7080', domain_ssl='192.168.1.155:7080' WHERE id_shop_url=1;" >> "$LOCAL_DIRECTORY/mnails.$DAYTIME.dump.sql"
-
-echo "--> Modification SQL effectuées."
-
-# -------------- Modification des informations sur la BDD -------------- #
-# Modification des permissions sur le conteneur docker presta
-
-nom_conteneur="presta_test_prestashop_1"
-
-#Redémarrage du conteneur
-docker restart $nom_conteneur
-
-docker exec -it $nom_conteneur chown -R www-data:www-data /var/www/html
-
-echo "--> Script terminée !"
+echo "--> Les fichiers sont bien téléchargés et décompressés."

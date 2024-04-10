@@ -1,5 +1,6 @@
+mkdir /vmfs/volumes/datastore1/ESXi_backup
 
-# Synchronisation de la configuration firmware de l'hôte ESXi avec la mémoire non volatile (NVRAM)
+# Synchronisation de la configuration firmware de l'hôte ESXi
 vim-cmd hostsvc/firmware/sync_config
 
 # Création d'une sauvegarde de la configuration de l'hôte ESXi
